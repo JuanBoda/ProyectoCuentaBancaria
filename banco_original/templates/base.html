@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Banco Original{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/estilos.css' %}" />
+    </head>
+    <body class="d-flex flex-column" style="min-height: 100vh;">
+        
+        <nav class="navbar navbar-dark bg-primary shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <h1 class="fs-4 mb-0">Banco Original</h1>
+                </a>                
+                
+                <div>
+                    <ul class="navbar-nav flex-row">
+                        <li class="nav-item">
+                            <a class="nav-link px-2" href="{% url 'home' %}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-2" href="{% url 'gestion_clientes:lista' %}">Clientes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-2" href="/admin/">Administración</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        {% block content %} 
+        {% endblock %}
+
+        <footer class="bg-dark text-white text-center p-3 mt-auto">
+            <p class="mb-0">&copy; 2023 Banco Original. Todos los derechos reservados.</p>
+        </footer>        
+        <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    </body>
+</html>

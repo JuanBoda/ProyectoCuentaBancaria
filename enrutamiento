@@ -1,0 +1,82 @@
+ENRUTAMIENTO: cómo viaja cada URL
+
+Escribes en el navegador: http://127.0.0.1:8000/
+el navegador emite una petición HTTP al servidor Django.
+
+¿Qué es URL?
+Una URL (Uniform Resource Locator) es la dirección que se utiliza para acceder a un recurso en la web. 
+En este caso, la URL http://127.0.0.1:8000/ apunta a la raíz del servidor Django en tu máquina local.
+
+¿Qué peticiona al servidor?
+La raíz / del sitio que es la página de inicio o home. O sea, "traeme tu home page".
+El servidor Django recibe la petición y debe decidir qué hacer con ella.
+
+¿Cómo sabe qué hacer el servidor Django y especialmente como obtener home page?
+El servidor transfiere la request a la app Django mediante ASGI/WSGI. Ahora es todo DJANGO.
+
+IMPORTANTE: Los pasos 1 y 2 lo se hace una sola vez al iniciar el servidor, NO EN CADA REQUEST.
+
+
+PASO 1: Peticioné la raíz del sitio, home page, al servidor Django y ahora Django busca. 
+        ¿Dónde esta home page? 
+        Django debe leer dos archivos clave: settings.py y urls.py.
+        1- settings.py tiene la configuración principal del proyecto.
+        2- urls.py tiene las rutas principales del proyecto.
+        settings.py contiene la configuración principal del proyecto. Cuando ejecutas el servidor 
+        de desarrollo con python manage.py runserver, Django busca automáticamente el archivo settings.py 
+        especificado por la variable de entorno DJANGO_SETTINGS_MODULE.
+        En este archivo se definen parámetros clave como:
+            ROOT_URLCONF: Indica el archivo de rutas principal (por ejemplo, "mi_proyecto.urls").
+            INSTALLED_APPS: Lista las aplicaciones instaladas.
+            TEMPLATES: Configura dónde buscar los archivos HTML.
+            DATABASES: Configura la base de datos.
+            LANGUAGE_CODE y TIME_ZONE: Configuran la localización.
+        Ahora lee - ROOT_URLCONF = mi_proyecto/urls.py - para saber cómo manejar las URLs entrantes.
+        En este caso buscar el inicio de la ruta donde está el archivo home.html         
+Resumen: El servidor lee settings.py para saber qué hacer y luego lee urls.py para saber cómo manejar 
+la URL solicitada.
+
+servidor -> WSGI/ASGI -> settings.py ... home.html?
+
+
+PASO 2: El archivo mi_proyecto/urls.py tiene las rutas principales
+        En el caso mas simple de una app, tiene dos rutas:
+            path("", home, name="home"): La raíz "" coincide con / y llama a la vista home.
+            path("app/", include("mi_app.urls", namespace="mi_app")): 
+        Cualquier URL que comience con /app/ se delega continuando a las rutas definidas 
+        en mi_app/urls.py.
+Resumen:
+El archivo urls.py del proyecto tiene las rutas principales al home y a la app. Por cada app
+agregamos mas rutas o path.
+Resolución de la UTRL:
+Con la request "/", Django busca patrones en mi_proyecto/urls.py.
+Si encuentra path("", home, ...), llama a home(request).
+Si ve include("mi_app.urls") y la ruta es /app/, deriva a mi_app/urls.py y
+ahí busca path("", home, name="home").
+
+servidor -> WSGI/ASGI -> settings.py -> urls.py ... home.html?
+
+
+PASO 3: El servidor llama a la vista home en mi_proyecto/views.py
+        La vista home es una función que recibe la petición HTTP y devuelve una respuesta HTTP.
+        En nuestro caso, la vista home simplemente renderiza (carga) la plantilla home.html.
+        from django.shortcuts import render
+        def home(request):
+            return render(request, "home.html")
+
+Ejecuta mi_proyecto/views.py::home => render("home.html").
+Templates: por settings.py, Django busca primero en templates/ => carga templates/home.html.
+
+servidor -> WSGI/ASGI -> settings.py -> urls.py -> views.py (llama a template/home.html)
+
+El HTML llega al navegador.
+
+PASO 4: El servidor devuelve la respuesta HTTP al navegador
+        La función render() carga la plantilla home.html, la procesa (inserta datos dinámicos si hay)
+        y genera el HTML final.
+        Luego crea una respuesta HTTP con ese HTML y la envía de vuelta al navegador.
+        El navegador recibe la respuesta y muestra la página web al usuario.
+
+
+Navegador pide una URL → Django (por WSGI/ASGI) mira urls.py, ejecuta la view, 
+(si corresponde) renderiza un template, y devuelve HTML al navegador.

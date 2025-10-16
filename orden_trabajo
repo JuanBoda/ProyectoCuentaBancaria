@@ -1,0 +1,73 @@
+# pyright: reportGeneralTypeIssues=none, reportMissingImports=none, reportOptionalMemberAccess=none
+
+#*Orden de trabajo: visión general + explicación en cada paso
+
+#/CREAR PROYECTO: django-admin startproject banco_original
+# Esto genera la carpeta del proyecto con manage.py y el paquete banco_original/ 
+# (con settings.py, urls.py, asgi.py, wsgi.py). Nada personalizado aún.
+
+#/CREAR APP: cd banco_original y luego python manage.py startapp gestion_clientes
+# Esto crea la carpeta gestion_clientes/ con archivos por defecto 
+# (models.py, views.py, admin.py, etc.). Luego vamos a modificar/ agregar contenido propio.
+
+#/AGREGAMOS common/ con utilidades compartidas
+# Creamos una carpeta nueva common/ con __init__.py y helpers.py para funciones genéricas
+# (ahora_str, limpiar_texto, etc.). Esto permite que otras apps futuras reutilicen utilidades
+# sin duplicar código. 
+
+#/AGREGAMOS templates/ (plantillas globales) y sus HTML
+# Creamos una carpeta global templates/ (fuera de las apps) con base.html, 
+# home.html y gestion_clientes/lista.html.
+# ¿Por qué global? Para centralizar layout (base) y evitar colisiones de nombres.
+# ¿Por qué subcarpeta gestion_clientes/ dentro de templates/? Convención para distinguir
+# plantillas por app sin mezclar archivos.
+
+#/MODIFICAMOS banco_original/settings.py
+# 1 Agregamos "gestion_clientes" a INSTALLED_APPS para que Django la registre y
+# (opcional) agregamos "common" a INSTALLED_APPS para que podamos usar sus utilidades.
+# 2 Ajustamos TEMPLATES["DIRS"] a [BASE_DIR / "templates"] 
+# para que Django busque primero en la carpeta global.
+# 3 Configuramos LANGUAGE_CODE = "es-ar" y TIME_ZONE = "America/Argentina/Buenos_Aires" para localización.
+# No tocamos la BD (SQLite por defecto).
+
+#/MODIFICAMOS banco_original/urls.py
+# 1 Agregamos la ruta "" (raíz) para home.
+# 2 Agregamos path("clientes/", include(...)) que delegará las rutas a la app gestion_clientes con namespace.
+# Esto habilita {% url 'gestion_clientes:lista' %} en las plantillas.
+
+#/AGREGAMOS banco_original/views.py
+# Creamos un archivo nuevo con una vista home mínima que renderiza home.html. 
+# No tiene lógica de negocio, es solo la puerta de entrada.
+
+#/MODIFICAMOS gestion_clientes/models.py
+# Cliente (base, tabla padre concreta) con campos comunes e inmutabilidad de CUIL/CUIT: 
+# se puede setear al crear, no cambiar al editar.
+# PersonaFisica(Cliente) y PersonaJuridica(Cliente) como subclases (multi-table inheritance).
+# Es una forma de herencia de modelos donde cada clase concreta tiene su propia tabla en la base de datos, 
+# y las tablas hijas se enlazan 1-1 con la tabla padre (comparten la misma PK).
+# Django crea automáticamente un campo OneToOneField interno (por convención <padre>_ptr) 
+# para mantener ese enlace.
+# Validaciones en clean() usando validators.py.
+# __str__() para representaciones legibles.
+
+#/MODIFICAMOS gestion_clientes/admin.py
+# registrar Cliente, PersonaFisica, PersonaJuridica y hacer solo lectura el CUIL/CUIT 
+# al editar (editable al crear).
+
+#/AGREGAMOS gestion_clientes/validators.py
+# Validaciones puras (no interactivas). Reusan common/helpers.py.
+
+#/AGREGAMOS gestion_clientes/urls.py
+# app_name = "gestion_clientes"
+# urlpatterns = [
+#     path("", lista_clientes, name="lista"),
+# ]
+# Hace reverse sin colisiones, urlpatterns mapea la raíz "" a lista_clientes.
+
+#/MODIFICAMOS gestion_clientes/views.py
+# lista_clientes trae Cliente.objects.all() (o mock si vacío) y renderiza gestion_clientes/lista.html.
+
+#*FINALMENTE: Migraciones + server
+#/python manage.py makemigrations - python manage.py migrate - python manage.py runserver
+
+

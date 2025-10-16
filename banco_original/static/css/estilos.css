@@ -1,0 +1,26 @@
+/* en static/css/estilos.css */
+
+.nombre-banco {
+    font-family: 'Roboto Slab', serif; /* Pega aquí la regla de Google Fonts */
+    color: #0d6efd; /* Opcional: le damos el color azul principal de Bootstrap */
+    white-space: nowrap;
+    font-size: 1.5em;
+}
+
+header .header-section .nav .nav-link {
+    font-size: 1.1rem; /* Lo ajusté a un tamaño más estándar, 2.1rem era muy grande */
+    font-weight: 600;  /* Un poco más de grosor */
+    color: #343a40; /* Un color de texto oscuro pero no negro puro */
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out; /* Animación más completa */
+}
+
+/* --- Efecto al pasar el ratón por encima (hover) --- */
+
+header .header-section .nav .nav-link:hover {
+    background-color: #e9ecef; /* Un gris un poco más notorio */
+    color: #0056b3; /* Un azul más intenso */
+    transform: translateY(-2px); /* Un sutil efecto de elevación */
+}
+

@@ -1,0 +1,28 @@
+banco_original/                               # 1 CREACION PROYECTO
+├─ manage.py                                  # (CREADO POR DEFECTO) sin cambios
+├─ banco_original/                            # (CREADO POR DEFECTO) paquete del proyecto
+│  ├─ __init__.py                             # (CREADO POR DEFECTO)
+│  ├─ asgi.py                                 # (CREADO POR DEFECTO) sin cambios
+│  ├─ settings.py                             # (5 MODIFICALO) TEMPLATES / INSTALLED_APPS / idioma-tz
+│  ├─ urls.py                                 # (6 MODIFICALO) home + include app
+│  ├─ views.py                                # (7 AGREGALO) home simple
+│  └─ wsgi.py                                 # (CREADO POR DEFECTO) sin cambios
+├─ common/                                    # (3 AGREGALO) utilidades compartidas
+│  ├─ __init__.py                             # (3 AGREGALO)
+│  └─ helpers.py                              # (3 AGREGALO)
+├─ gestion_clientes/                          # (2 CREADO POR DEFECTO por startapp)
+│  ├─ __init__.py                             # (CREADO POR DEFECTO)
+│  ├─ admin.py                                # (9 MODIFICALO) registrar Cliente
+│  ├─ apps.py                                 # (CREADO POR DEFECTO) sin cambios
+│  ├─ migrations/                             # (CREADO POR DEFECTO)
+│  │  └─ __init__.py                          # (CREADO POR DEFECTO)
+│  ├─ models.py                               # (8 MODIFICALO) modelo base Cliente
+│  ├─ tests.py                                # (CREADO POR DEFECTO) sin cambios
+│  ├─ urls.py                                 # (11 AGREGALO) rutas de la app (namespace)
+│  ├─ validators.py                           # (10 AGREGALO) validaciones de dominio
+│  └─ views.py                                # (12 MODIFICALO) vista lista_clientes
+└─ templates/                                 # (4 AGREGALO) plantillas globales
+   ├─ base.html                               # (4 AGREGALO) layout sin CSS
+   ├─ home.html                               # (4 AGREGALO) panel de bienvenida
+   └─ gestion_clientes/                       # (4 AGREGALO) subcarpeta por app (convención)
+      └─ lista.html                           # (4 AGREGALO) listado de clientes
