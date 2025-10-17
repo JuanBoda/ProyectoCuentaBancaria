@@ -1,45 +1,72 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <meta charset="UTF-8">                                                                                                                                   
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %}Banco Original{% endblock %}</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+        {% load static %}
+        <link
+            rel="stylesheet"
+            href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
         <link rel="stylesheet" href="{% static 'css/estilos.css' %}" />
     </head>
-    <body class="d-flex flex-column" style="min-height: 100vh;">
-        
-        <nav class="navbar navbar-dark bg-primary shadow-sm">
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'home' %}">
-                    <h1 class="fs-4 mb-0">Banco Original</h1>
-                </a>                
-                
-                <div>
-                    <ul class="navbar-nav flex-row">
+                <a class="navbar-brand" href="{% url 'home' %}"
+                    >Banco Original</a
+                >
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link px-2" href="{% url 'home' %}">Inicio</a>
+                            <span class="nav-link"
+                                >Bienvenido, {{ user.username }}</span
+                            >
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-2" href="{% url 'gestion_clientes:lista' %}">Clientes</a>
+                            <form
+                                action="{% url 'logout' %}"
+                                method="post"
+                                class="d-inline">
+                                {% csrf_token %}
+                                <button
+                                    type="submit"
+                                    class="btn btn-link nav-link"
+                                    style="
+                                        display: inline;
+                                        padding: 0;
+                                        border: none;
+                                        background: none;
+                                    ">
+                                    Logout
+                                </button>
+                            </form>
                         </li>
+                        {% else %}
                         <li class="nav-item">
-                            <a class="nav-link px-2" href="/admin/">Administración</a>
+                            <a class="nav-link" href="{% url 'login' %}"
+                                >Login</a
+                            >
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
         </nav>
 
-        {% block content %} 
-        {% endblock %}
+        <main class="container mt-4">{% block content %} {% endblock %}</main>
 
-        <footer class="bg-dark text-white text-center p-3 mt-auto">
-            <p class="mb-0">&copy; 2023 Banco Original. Todos los derechos reservados.</p>
-        </footer>        
         <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     </body>
 </html>

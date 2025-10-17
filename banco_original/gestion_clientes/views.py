@@ -2,8 +2,10 @@ from django.shortcuts import render
 from .models import PersonaFisica, PersonaJuridica
 from django.db.models import Value, CharField
 from itertools import chain
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def lista_cliente(request):
     pf = (
         PersonaFisica.objects.order_by("nombre")
