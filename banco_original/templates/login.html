@@ -1,19 +1,48 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - Banco Original{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card mt-5">
-                <div class="card-header">
-                    <h3 class="text-center">Iniciar Sesión</h3>
-                </div>
-                <div class="card-body">
+        <div class="col-lg-5 col-md-7 col-sm-9">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-body p-5">
+                    <div class="text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-bank2 mb-4 text-primary" viewBox="0 0 16 16">
+                            <path d="M8.277.084a.5.5 0 0 0-.554 0l-7.5 5A.5.5 0 0 0 .5 6h1.875v7H1.5a.5.5 0 0 0 0 1h13a.5.5 0 1 0 0-1h-.875V6H15.5a.5.5 0 0 0 .277-.916zM12.375 6v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zM8 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2M.5 15a.5.5 0 0 0 0 1h15a.5.5 0 1 0 0-1z"/>
+                        </svg>
+                        <h3 class="fw-light mb-4">Bienvenido de Nuevo</h3>
+                    </div>
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger text-center" role="alert">
+                            Tu usuario y contraseña no coinciden. Por favor, inténtalo de nuevo.
+                        </div>
+                    {% endif %}
+
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="username" class="form-control" id="id_username" placeholder="Usuario" required>
+                            <label for="id_username">Nombre de usuario</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" name="password" class="form-control" id="id_password" placeholder="Contraseña" required>
+                            <label for="id_password">Contraseña</label>
+                        </div>
+                        
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Iniciar Sesión</button>
+                        </div>
+                        <div class="text-center">
+                            <a class="small" href="#!">¿Olvidaste tu contraseña?</a>
+                        </div>
                     </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small"><a href="#!">¿Necesitas una cuenta? ¡Regístrate!</a></div>
                 </div>
             </div>
         </div>

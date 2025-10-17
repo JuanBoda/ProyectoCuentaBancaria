@@ -30,9 +30,7 @@
                     <ul class="navbar-nav ms-auto">
                         {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <span class="nav-link"
-                                >Bienvenido, {{ user.username }}</span
-                            >
+                            <span class="nav-link">{{ user.username }}</span>
                         </li>
                         <li class="nav-item">
                             <form
@@ -45,7 +43,7 @@
                                     class="btn btn-link nav-link"
                                     style="
                                         display: inline;
-                                        padding: 0;
+                                        padding: 3;
                                         border: none;
                                         background: none;
                                     ">
