@@ -4,6 +4,32 @@ from django.db import models
 
 
 class ClienteBase(models.Model):
+    """
+    Modelo base abstracto para la gestión de clientes del sistema bancario.
+    Esta clase define los campos y validaciones comunes para todos los tipos de clientes,
+    incluyendo información personal básica y reglas de negocio específicas del dominio bancario.
+    Attributes:
+        nombre (CharField): Nombre completo del cliente (máximo 50 caracteres).
+        cuil (CharField): CUIL del cliente (11 caracteres, único e inmutable después de creación).
+        mail (EmailField): Dirección de correo electrónico del cliente (máximo 120 caracteres, único).
+        direccion (CharField): Dirección física del cliente (máximo 120 caracteres).
+        telefono (CharField): Número de teléfono del cliente (máximo 15 caracteres, único).
+    Meta:
+        abstract (bool): True - Esta es una clase base abstracta.
+        verbose_name (str): Nombre singular para la interfaz de administración.
+        verbose_name_plural (str): Nombre plural para la interfaz de administración.
+        ordering (list): Ordenamiento por defecto por nombre del cliente.
+    Methods:
+        clean(): Valida todos los campos del cliente y garantiza que el CUIL sea inmutable.
+        __str__(): Retorna una representación string del cliente con formato "Nombre - CUIL/CUIT:número".
+    Raises:
+        ValidationError: Se lanza cuando algún campo no cumple con las validaciones específicas
+                        del dominio o cuando se intenta modificar el CUIL de un cliente existente.
+    Note:
+        Esta clase utiliza el módulo 'v' (validadores) para realizar validaciones específicas
+        de cada campo según las reglas de negocio del sistema bancario.
+    """
+
     nombre = models.CharField(max_length=50)
     cuil = models.CharField(max_length=11, unique=True)
     mail = models.EmailField(max_length=120, unique=True)
@@ -17,6 +43,7 @@ class ClienteBase(models.Model):
         abstract = True
 
     def clean(self):
+        """Ejecuta la validación para cada campo del cliente y asegura la inmutabilidad del CUIL."""
         if not v.es_nombre_valido(self.nombre):
             raise ValidationError({"nombre": "El nombre no es válido."})
         if not v.es_cuil_valido(self.cuil):
@@ -35,10 +62,12 @@ class ClienteBase(models.Model):
                 raise ValidationError({"cuil": "El CUIL no puede ser modificado."})
 
     def __str__(self):
+        """Retorna la representación en string del cliente."""
         return f"{self.nombre} - CUIL/CUIT:{self.cuil}"
 
 
 class PersonaFisica(ClienteBase):
+    """Modelo que representa a un cliente de tipo Persona Física."""
     dni = models.CharField(max_length=8, unique=True)
 
     class Meta:
@@ -46,6 +75,7 @@ class PersonaFisica(ClienteBase):
         verbose_name_plural = "Personas Físicas"
 
     def clean(self):
+        """Valida los campos específicos de Persona Física y la inmutabilidad del DNI."""
         # Ejecutar validaciones de la clase base
         super().clean()
 
@@ -62,6 +92,7 @@ class PersonaFisica(ClienteBase):
 
 
 class PersonaJuridica(ClienteBase):
+    """Modelo que representa a un cliente de tipo Persona Jurídica."""
     razon_social = models.CharField(max_length=50)
 
     class Meta:
@@ -69,6 +100,7 @@ class PersonaJuridica(ClienteBase):
         verbose_name_plural = "Personas Jurídicas"
 
     def clean(self):
+        """Valida los campos específicos de Persona Jurídica."""
         # Ejecutar validaciones de la clase base
         super().clean()
 
