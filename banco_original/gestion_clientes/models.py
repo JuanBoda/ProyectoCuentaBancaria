@@ -8,26 +8,6 @@ class ClienteBase(models.Model):
     Modelo base abstracto para la gestión de clientes del sistema bancario.
     Esta clase define los campos y validaciones comunes para todos los tipos de clientes,
     incluyendo información personal básica y reglas de negocio específicas del dominio bancario.
-    Attributes:
-        nombre (CharField): Nombre completo del cliente (máximo 50 caracteres).
-        cuil (CharField): CUIL del cliente (11 caracteres, único e inmutable después de creación).
-        mail (EmailField): Dirección de correo electrónico del cliente (máximo 120 caracteres, único).
-        direccion (CharField): Dirección física del cliente (máximo 120 caracteres).
-        telefono (CharField): Número de teléfono del cliente (máximo 15 caracteres, único).
-    Meta:
-        abstract (bool): True - Esta es una clase base abstracta.
-        verbose_name (str): Nombre singular para la interfaz de administración.
-        verbose_name_plural (str): Nombre plural para la interfaz de administración.
-        ordering (list): Ordenamiento por defecto por nombre del cliente.
-    Methods:
-        clean(): Valida todos los campos del cliente y garantiza que el CUIL sea inmutable.
-        __str__(): Retorna una representación string del cliente con formato "Nombre - CUIL/CUIT:número".
-    Raises:
-        ValidationError: Se lanza cuando algún campo no cumple con las validaciones específicas
-                        del dominio o cuando se intenta modificar el CUIL de un cliente existente.
-    Note:
-        Esta clase utiliza el módulo 'v' (validadores) para realizar validaciones específicas
-        de cada campo según las reglas de negocio del sistema bancario.
     """
 
     nombre = models.CharField(max_length=50)
@@ -68,6 +48,7 @@ class ClienteBase(models.Model):
 
 class PersonaFisica(ClienteBase):
     """Modelo que representa a un cliente de tipo Persona Física."""
+
     dni = models.CharField(max_length=8, unique=True)
 
     class Meta:
@@ -93,6 +74,7 @@ class PersonaFisica(ClienteBase):
 
 class PersonaJuridica(ClienteBase):
     """Modelo que representa a un cliente de tipo Persona Jurídica."""
+
     razon_social = models.CharField(max_length=50)
 
     class Meta:

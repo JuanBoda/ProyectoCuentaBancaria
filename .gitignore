@@ -4,6 +4,9 @@
 # Entorno virtual
 venv/
 
+# Instrucciones y logs locales
+instrucciones_chat/
+
 # Bases de datos
 *.sqlite3
 
