@@ -1,41 +1,13 @@
 from django.shortcuts import render
-from .models import PersonaFisica, PersonaJuridica
-from django.db.models import Value, CharField
-from itertools import chain
 from django.contrib.auth.decorators import login_required
+from .services import cliente_service
 
 
 @login_required
 def lista_cliente(request):
-    pf = (
-        PersonaFisica.objects.order_by("nombre")
-        .values("id", "nombre", "dni", "cuil", "mail", "telefono", "direccion")
-        .annotate(tipo=Value("Persona Física", output_field=CharField()))
-    )
-    pj = (
-        PersonaJuridica.objects.order_by("razon_social")
-        .values("id", "nombre", "cuil", "razon_social", "mail", "telefono", "direccion")
-        .annotate(tipo=Value("Persona Jurídica", output_field=CharField()))
-    )
-
-    salida = list(chain(pf, pj))
-
-    if not salida:
-        salida = [
-            {
-                "tipo": "Persona Física",
-                "nombre": "ANA LOPEZ",
-                "cuil": "20123456783",
-                "mail": "ana@ej.com",
-                "telefono": "11133334444",
-            },
-            {
-                "tipo": "Persona Jurídica",
-                "nombre": "ACME S.A",
-                "cuil": "30765432109",
-                "mail": "info@acme.com",
-                "telefono": "11144445555",
-            },
-        ]
-
-    return render(request, "gestion_clientes/lista.html", {"clientes": salida})
+    """
+    Orquesta la obtención de la lista de clientes y la renderiza.
+    Delega toda la lógica de negocio al servicio de clientes.
+    """
+    clientes = cliente_service.obtener_clientes_unificados()
+    return render(request, "gestion_clientes/lista.html", {"clientes": clientes})
