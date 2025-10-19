@@ -50,6 +50,7 @@ pytest==8.4.1
 pytest-base-url==2.1.0
 pytest-playwright==0.7.0
 python-dateutil==2.9.0.post0
+python-decouple==3.8
 python-slugify==8.0.4
 pywin32==311
 pyzmq==27.0.0
